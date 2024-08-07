@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+// src/components/Cart.jsx
+import React, { useCallback, useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -18,20 +19,27 @@ const Cart = ({
   onSaveOrder,
   onCompleteOrder,
 }) => {
-  const [localTotalPrice, setLocalTotalPrice] = React.useState(0);
+  const [localTotalPrice, setLocalTotalPrice] = useState(0);
 
   useEffect(() => {
-    // Calculate the total price whenever the cart changes
-    const newTotalPrice = cart.reduce(
-      (total, item) => total + (item.product.price || 0) * item.quantity,
-      0
+    setLocalTotalPrice(
+      cart.reduce(
+        (total, item) => total + (item.product.price || 0) * item.quantity,
+        0
+      )
     );
-    setLocalTotalPrice(newTotalPrice);
   }, [cart]);
 
+  const handleRemove = useCallback(
+    (productId) => onRemoveFromCart(productId),
+    [onRemoveFromCart]
+  );
+
   return (
-    <Paper elevation={3} sx={{ padding: 2 }}>
-      <Typography variant="h6">Cart</Typography>
+    <Paper elevation={3} sx={{ padding: 2, borderRadius: 2 }}>
+      <Typography variant="h6" gutterBottom>
+        Cart
+      </Typography>
       <List>
         {cart.map((item) => (
           <ListItem
@@ -40,22 +48,32 @@ const Cart = ({
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
+              borderBottom: "1px solid #e0e0e0",
+              paddingY: 1,
             }}
           >
-            <Typography>
+            <Typography variant="body1">
               {item.product.name} (x{item.quantity})
             </Typography>
-            <IconButton onClick={() => onRemoveFromCart(item.product._id)}>
+            <IconButton
+              color="error"
+              onClick={() => handleRemove(item.product._id)}
+              sx={{ marginLeft: 1 }}
+            >
               <RemoveIcon />
             </IconButton>
           </ListItem>
         ))}
       </List>
-      <Divider />
+      <Divider sx={{ marginY: 2 }} />
       <Box
-        sx={{ display: "flex", justifyContent: "space-between", marginTop: 2 }}
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
       >
-        <Typography variant="h6">
+        <Typography variant="h6" color="textPrimary">
           Total: $
           {!isNaN(localTotalPrice) ? localTotalPrice.toFixed(2) : "0.00"}
         </Typography>
@@ -64,11 +82,16 @@ const Cart = ({
             variant="contained"
             color="primary"
             onClick={onSaveOrder}
-            sx={{ marginRight: 1 }}
+            sx={{ marginRight: 1, borderRadius: 1 }}
           >
             Save Order
           </Button>
-          <Button variant="contained" color="success" onClick={onCompleteOrder}>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={onCompleteOrder}
+            sx={{ borderRadius: 1 }}
+          >
             Complete Order
           </Button>
         </Box>

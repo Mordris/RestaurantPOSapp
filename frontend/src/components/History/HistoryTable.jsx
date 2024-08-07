@@ -1,5 +1,4 @@
-// src/components/HistoryTable.jsx
-import React from "react";
+import React, { memo } from "react";
 import {
   Table,
   TableBody,
@@ -10,9 +9,11 @@ import {
   Paper,
 } from "@mui/material";
 
-const HistoryTable = ({ filteredHistory }) => {
+const HistoryTable = memo(({ filteredHistory }) => {
+  const formatDate = (date) => new Intl.DateTimeFormat('en-US').format(new Date(date));
+
   return (
-    <TableContainer component={Paper} style={{ marginTop: "20px" }}>
+    <TableContainer component={Paper} sx={{ marginTop: 2 }}>
       <Table>
         <TableHead>
           <TableRow>
@@ -33,14 +34,14 @@ const HistoryTable = ({ filteredHistory }) => {
                   .map((p) => `${p.product.name} (x${p.quantity})`)
                   .join(", ")}
               </TableCell>
-              <TableCell>${entry.price}</TableCell>
-              <TableCell>{new Date(entry.date).toLocaleString()}</TableCell>
+              <TableCell>${entry.price.toFixed(2)}</TableCell>
+              <TableCell>{formatDate(entry.date)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
   );
-};
+});
 
 export default HistoryTable;

@@ -1,17 +1,17 @@
-// src/pages/HistoryPage.jsx
 import React, { useEffect, useState, useCallback } from "react";
-import { Container, Typography, Box, Paper } from "@mui/material";
+import { Typography, Box, Paper, CircularProgress, Alert } from "@mui/material";
 import axios from "axios";
-import SearchAndSort from "../components/SearchAndSort";
-import HistoryTable from "../components/HistoryTable";
+import SearchAndSort from "../components/History/SearchAndSort";
+import HistoryTable from "../components/History/HistoryTable";
 
 const HistoryPage = () => {
   const [history, setHistory] = useState([]);
   const [filteredHistory, setFilteredHistory] = useState([]);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("newest");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // Fetch history data once when component mounts
   useEffect(() => {
     const fetchHistory = async () => {
       try {
@@ -25,13 +25,15 @@ const HistoryPage = () => {
         }
       } catch (error) {
         console.error("Error fetching history:", error);
+        setError("Failed to load history.");
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchHistory();
   }, []);
 
-  // Filter and sort history based on search and sort criteria
   const filterAndSortHistory = useCallback(
     (searchTerm, sortOption) => {
       let filtered = history.filter((entry) => {
@@ -77,12 +79,15 @@ const HistoryPage = () => {
     setSort(e.target.value);
   };
 
+  if (loading) return <CircularProgress />;
+  if (error) return <Alert severity="error">{error}</Alert>;
+
   return (
-    <Container maxWidth="lg" sx={{ paddingY: 4 }}>
+    <Box sx={{ px: { xs: 2, sm: 4 }, py: 4 }}>
       <Typography variant="h3" gutterBottom align="center">
         Order History
       </Typography>
-      <Box sx={{ marginBottom: 4 }}>
+      <Box sx={{ mb: 4 }}>
         <SearchAndSort
           search={search}
           sort={sort}
@@ -90,10 +95,10 @@ const HistoryPage = () => {
           onSortChange={handleSortChange}
         />
       </Box>
-      <Paper sx={{ padding: 2 }}>
+      <Paper sx={{ p: 2 }}>
         <HistoryTable filteredHistory={filteredHistory} />
       </Paper>
-    </Container>
+    </Box>
   );
 };
 

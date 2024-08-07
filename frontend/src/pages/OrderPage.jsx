@@ -1,10 +1,11 @@
+// src/pages/OrderPage.jsx
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Container, Grid, Typography, TextField } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import axios from "axios";
-import Cart from "../components/Cart";
-import ProductGrid from "../components/ProductGrid";
-import StatusToggle from "../components/StatusToggle";
+import OrderStatus from "../components/Order/OrderStatus";
+import ProductSearch from "../components/Order/ProductSearch";
+import OrderContent from "../components/Order/OrderContent";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -31,13 +32,13 @@ const OrderPage = () => {
           `http://localhost:5000/tables/${tableId}`
         );
         setStatus(tableResponse.data.status);
-        setTableNumber(tableResponse.data.number); // Set table number
+        setTableNumber(tableResponse.data.number);
 
         const ordersResponse = await axios.get(
           `http://localhost:5000/orders/table/${tableId}`
         );
         if (ordersResponse.data.length > 0) {
-          setOrderId(ordersResponse.data[0]._id); // Set order ID
+          setOrderId(ordersResponse.data[0]._id);
           setCart(
             ordersResponse.data[0].products.map((p) => ({
               product: {
@@ -84,7 +85,7 @@ const OrderPage = () => {
       prevCart
         .map((item) =>
           item.product._id === productId
-            ? { ...item, quantity: item.quantity - 1 }
+            ? { ...item, quantity: Math.max(item.quantity - 1, 0) }
             : item
         )
         .filter((item) => item.quantity > 0)
@@ -120,7 +121,7 @@ const OrderPage = () => {
           quantity: p.quantity,
         }))
       );
-      setOrderId(response.data._id); // Update order ID
+      setOrderId(response.data._id);
       toast.success("Order saved successfully!");
     } catch (error) {
       setError("Failed to save order");
@@ -131,12 +132,12 @@ const OrderPage = () => {
   const handleCompleteOrder = async () => {
     try {
       if (!orderId) {
-        await handleSaveOrder(); // Save the order if not already saved
+        await handleSaveOrder();
       }
 
       await axios.post(`http://localhost:5000/orders/${orderId}/complete`);
       setCart([]);
-      setOrderId(null); // Clear order ID
+      setOrderId(null);
       toast.success("Order completed successfully!");
     } catch (error) {
       setError("Failed to complete order");
@@ -144,50 +145,45 @@ const OrderPage = () => {
     }
   };
 
+  const handleStatusChange = async (newStatus) => {
+    try {
+      await axios.put(`http://localhost:5000/tables/${tableId}`, {
+        status: newStatus,
+      });
+      setStatus(newStatus);
+    } catch (error) {
+      setError("Failed to update status");
+      toast.error("Failed to update status");
+    }
+  };
+
   if (loading) return <Typography>Loading...</Typography>;
   if (error) return <Typography color="error">{error}</Typography>;
 
   return (
-    <Container>
+    <Box sx={{ px: { xs: 2, sm: 4 } }}>
       <Typography variant="h4" gutterBottom>
         Order for Table {tableNumber}
       </Typography>
-      <StatusToggle
-        status={status}
-        onChange={(newStatus) => setStatus(newStatus)}
+      <Box sx={{ mb: 2 }}>
+        <OrderStatus status={status} onChange={handleStatusChange} />
+      </Box>
+      <ProductSearch
+        search={search}
+        onSearchChange={(e) => setSearch(e.target.value)}
       />
-      <TextField
-        variant="outlined"
-        label="Search Products"
-        fullWidth
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        sx={{ marginBottom: 2 }}
+      <OrderContent
+        products={products.filter((product) =>
+          product.name.toLowerCase().includes(search.toLowerCase())
+        )}
+        cart={cart}
+        onAddToCart={handleAddToCart}
+        onRemoveFromCart={handleRemoveFromCart}
+        onSaveOrder={handleSaveOrder}
+        onCompleteOrder={handleCompleteOrder}
       />
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={8}>
-          <ProductGrid
-            products={products.filter((product) =>
-              product.name.toLowerCase().includes(search.toLowerCase())
-            )}
-            onAddToCart={handleAddToCart}
-          />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Cart
-            cart={cart}
-            onRemoveFromCart={handleRemoveFromCart}
-            totalPrice={cart.reduce(
-              (total, item) => total + item.product.price * item.quantity,
-              0
-            )}
-            onSaveOrder={handleSaveOrder}
-            onCompleteOrder={handleCompleteOrder}
-          />
-        </Grid>
-      </Grid>
-      <ToastContainer />
-    </Container>
+      <ToastContainer className="toast-container" />
+    </Box>
   );
 };
 

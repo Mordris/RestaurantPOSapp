@@ -36,3 +36,11 @@ code {
 .MuiDivider-root {
   margin: 16px 0;
 }
+
+/* src/styles/toastContainer.css */
+.toast-container {
+  position: fixed;
+  top: 70px; /* Adjust this value based on the height of your navbar */
+  right: 16px; /* Adjust this value for horizontal alignment */
+  z-index: 1500; /* Ensure it is above other components */
+}

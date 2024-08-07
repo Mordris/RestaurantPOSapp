@@ -1,13 +1,12 @@
 import React from "react";
-import { Button, Container, Typography, Grid, Box } from "@mui/material";
+import { Button, Typography, Grid, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 function HomePage() {
   const navigate = useNavigate();
 
   return (
-    <Container
-      maxWidth="md"
+    <Box
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -15,7 +14,8 @@ function HomePage() {
         justifyContent: "center",
         minHeight: "100vh",
         bgcolor: "#f5f5f5",
-        p: 3,
+        px: { xs: 2, sm: 4 },
+        py: 4,
       }}
     >
       <Typography variant="h3" gutterBottom>
@@ -81,7 +81,7 @@ function HomePage() {
           </Box>
         </Grid>
       </Grid>
-    </Container>
+    </Box>
   );
 }
 
