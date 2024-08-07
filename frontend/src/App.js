@@ -1,26 +1,23 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import POSPage from './pages/POSPage';
-import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-
-const theme = createTheme();
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import TablePage from "./pages/TablePage";
+import OrderPage from "./pages/OrderPage";
+import HistoryPage from "./pages/HistoryPage";
+import MainLayout from "./layouts/MainLayout";
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
+    <Router>
+      <MainLayout>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/pos" element={<POSPage />} />
+          <Route path="/tables" element={<TablePage />} />
+          <Route path="/orders/:tableId" element={<OrderPage />} />
+          <Route path="/history" element={<HistoryPage />} />
         </Routes>
-      </Router>
-    </ThemeProvider>
+      </MainLayout>
+    </Router>
   );
 }
 

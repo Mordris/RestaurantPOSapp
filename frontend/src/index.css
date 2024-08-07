@@ -19,3 +19,20 @@ code {
 .pos-item img {
   object-fit: contain;
 }
+
+/* Improve Cart Design */
+.MuiPaper-elevation3 {
+  border-radius: 8px;
+}
+
+.MuiTypography-h6 {
+  font-weight: bold;
+}
+
+.MuiButton-containedPrimary {
+  margin-top: 10px;
+}
+
+.MuiDivider-root {
+  margin: 16px 0;
+}

@@ -1,25 +1,87 @@
-import React from 'react';
-import { Button, Typography, Box, Container } from '@mui/material';
-import { Link } from 'react-router-dom';
-import MainLayout from '../layouts/MainLayout';
+import React from "react";
+import { Button, Container, Typography, Grid, Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
+  const navigate = useNavigate();
+
   return (
-    <MainLayout>
-      <Container>
-        <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="100vh" textAlign="center">
-          <Typography variant="h3" component="h1" gutterBottom>
-            Welcome to RestaPOS
-          </Typography>
-          <Typography variant="h6" component="p" gutterBottom>
-            Efficiently manage your sales with our Point of Sale system.
-          </Typography>
-          <Button variant="contained" color="primary" component={Link} to="/pos">
-            Go to POS
-          </Button>
-        </Box>
-      </Container>
-    </MainLayout>
+    <Container
+      maxWidth="md"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        bgcolor: "#f5f5f5",
+        p: 3,
+      }}
+    >
+      <Typography variant="h3" gutterBottom>
+        Welcome to the POS System
+      </Typography>
+      <Typography variant="h6" color="textSecondary" paragraph>
+        Manage your restaurant efficiently with easy access to tables and order
+        history.
+      </Typography>
+      <Grid container spacing={2} justifyContent="center">
+        <Grid item xs={12} sm={6} md={4}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              p: 3,
+              bgcolor: "#fff",
+              boxShadow: 3,
+              borderRadius: 2,
+              textAlign: "center",
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Tables
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={() => navigate("/tables")}
+              sx={{ mt: 2 }}
+            >
+              Go to Tables
+            </Button>
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              p: 3,
+              bgcolor: "#fff",
+              boxShadow: 3,
+              borderRadius: 2,
+              textAlign: "center",
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              History
+            </Typography>
+            <Button
+              variant="contained"
+              color="secondary"
+              size="large"
+              onClick={() => navigate("/history")}
+              sx={{ mt: 2 }}
+            >
+              Go to History
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
+    </Container>
   );
 }
 
