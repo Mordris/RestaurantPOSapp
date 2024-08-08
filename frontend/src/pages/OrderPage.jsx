@@ -8,6 +8,7 @@ import ProductSearch from "../components/Order/ProductSearch";
 import OrderContent from "../components/Order/OrderContent";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import generateReceipt from "../utils/generateReceipt";
 
 const OrderPage = () => {
   const { tableId } = useParams();
@@ -94,7 +95,7 @@ const OrderPage = () => {
 
   const handleSaveOrder = async () => {
     try {
-      await axios.post("http://localhost:5000/orders", {
+      const response = await axios.post("http://localhost:5000/orders", {
         table: tableId,
         products: cart.map((item) => ({
           product: item.product._id,
@@ -106,7 +107,7 @@ const OrderPage = () => {
         ),
       });
 
-      // No need to refetch the products, just keep the cart state as it is
+      setOrderId(response.data._id); // Update orderId with the saved order's ID
       toast.success("Order saved successfully!");
     } catch (error) {
       setError("Failed to save order");
@@ -122,13 +123,39 @@ const OrderPage = () => {
       }
 
       if (!orderId) {
-        await handleSaveOrder();
+        toast.warn("Please save the order before completing it.");
+        return; // Early return if no order ID
       }
 
       await axios.post(`http://localhost:5000/orders/${orderId}/complete`);
+
+      // Generate receipt PDF
+      const receiptPdfUrl = generateReceipt({
+        table: tableNumber,
+        products: cart.map((item) => ({
+          product: {
+            name: item.product.name,
+            price: item.product.price,
+          },
+          quantity: item.quantity,
+        })),
+        price: cart.reduce(
+          (total, item) => total + item.product.price * item.quantity,
+          0
+        ),
+        orderNo: orderId, // Pass orderNo to the receipt function
+      });
+
+      // Create a link element and trigger the download
+      const link = document.createElement("a");
+      link.href = receiptPdfUrl;
+      link.download = `Receipt${orderId}.pdf`; // Name the file
+      link.click();
+
+      // Clear cart and order ID
       setCart([]);
       setOrderId(null);
-      toast.success("Order completed successfully!");
+      toast.success("Order completed and receipt generated successfully!");
     } catch (error) {
       setError("Failed to complete order");
       toast.error("Failed to complete order");
