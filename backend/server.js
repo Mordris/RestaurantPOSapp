@@ -16,10 +16,12 @@ connectDB();
 const productRoutes = require("./routes/products");
 const tableRoutes = require("./routes/tables");
 const orderRoutes = require("./routes/orders");
+const historyRoutes = require("./routes/history");
 
 app.use("/products", productRoutes);
 app.use("/tables", tableRoutes);
 app.use("/orders", orderRoutes);
+app.use("/history", historyRoutes);
 
 // Start server
 app.listen(port, () => {
