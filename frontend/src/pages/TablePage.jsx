@@ -43,7 +43,7 @@ const TablePage = () => {
       </Typography>
       <Grid container spacing={3}>
         {tables.map((table) => (
-          <Grid item xs={12} sm={6} md={4} key={table._id}>
+          <Grid item xs={12} sm={6} md={4} lg={2} key={table._id}>
             <TableCard table={table} onStatusChange={handleStatusChange} />
           </Grid>
         ))}
