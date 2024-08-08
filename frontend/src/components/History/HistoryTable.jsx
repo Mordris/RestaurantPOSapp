@@ -28,6 +28,9 @@ const HistoryTable = ({ history, lastElementRef }) => {
               <TableRow
                 key={entry._id}
                 ref={isLastElement ? lastElementRef : null}
+                sx={{
+                  backgroundColor: index % 2 === 0 ? "#f5f5f5" : "#ffffff",
+                }}
               >
                 <TableCell>{new Date(entry.date).toLocaleString()}</TableCell>
                 <TableCell>{entry.table.name}</TableCell>

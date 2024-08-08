@@ -72,9 +72,9 @@ const HistoryPage = () => {
   };
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box className="history-page-background" sx={{ p: 2 }}>
       <Typography variant="h4" gutterBottom>
-        Order History
+        <span className="headingSpan">Order History</span>
       </Typography>
 
       <Paper sx={{ p: 2, mb: 2 }}>

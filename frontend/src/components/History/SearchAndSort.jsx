@@ -20,7 +20,7 @@ const SearchAndSort = ({ search, onSearchChange, sort, onSortChange }) => {
       />
 
       <FormControl variant="outlined" sx={{ width: "30%" }}>
-        <InputLabel>Sort By</InputLabel>
+        <InputLabel sx={{marginTop: -1}}>Sort By</InputLabel>
         <Select value={sort} onChange={(e) => onSortChange(e.target.value)}>
           <MenuItem value="newest">Newest</MenuItem>
           <MenuItem value="oldest">Oldest</MenuItem>

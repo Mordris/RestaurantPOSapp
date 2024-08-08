@@ -37,9 +37,9 @@ const TablePage = () => {
   };
 
   return (
-    <Box sx={{ py: 4 }}>
+    <Box className="table-page-background" sx={{ py: 4 }}>
       <Typography variant="h3" gutterBottom align="center">
-        Table Management
+        <span className="headingSpan">Table Management</span>
       </Typography>
       <Grid container spacing={3}>
         {tables.map((table) => (

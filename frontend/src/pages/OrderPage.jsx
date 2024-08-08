@@ -178,17 +178,20 @@ const OrderPage = () => {
   if (error) return <Typography color="error">{error}</Typography>;
 
   return (
-    <Box sx={{ px: { xs: 2, sm: 4 } }}>
+    <Box className="order-page-background" sx={{ px: { xs: 2, sm: 4 } }}>
       <Typography variant="h4" gutterBottom>
-        Order for Table {tableNumber}
+        <span className="headingSpan">Order for Table {tableNumber}</span>
       </Typography>
       <Box sx={{ mb: 2 }}>
         <OrderStatus status={status} onChange={handleStatusChange} />
       </Box>
-      <ProductSearch
-        search={search}
-        onSearchChange={(e) => setSearch(e.target.value)}
-      />
+      <div className="headingSpan">
+        <ProductSearch
+          search={search}
+          onSearchChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
       <OrderContent
         products={products.filter((product) =>
           product.name.toLowerCase().includes(search.toLowerCase())

@@ -7,23 +7,26 @@ function HomePage() {
 
   return (
     <Box
+      className="home-page-background" // Apply the background class here
       sx={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: "100vh",
-        bgcolor: "#f5f5f5",
+        minHeight: "calc(100vh - 64px)", // Adjusting height considering Navbar height
+        bgcolor: "transparent", // Override default bgcolor
         px: { xs: 2, sm: 4 },
         py: 4,
       }}
     >
       <Typography variant="h3" gutterBottom>
-        Welcome to the POS System
+        <span className="headingSpan">Welcome to the POS System</span>
       </Typography>
       <Typography variant="h6" color="textSecondary" paragraph>
-        Manage your restaurant efficiently with easy access to tables and order
-        history.
+        <span className="headingSpan">
+          Manage your restaurant efficiently with easy access to tables and
+          order history.
+        </span>
       </Typography>
       <Grid container spacing={2} justifyContent="center">
         <Grid item xs={12} sm={6} md={4}>
