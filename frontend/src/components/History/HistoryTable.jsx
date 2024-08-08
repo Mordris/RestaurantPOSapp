@@ -10,7 +10,16 @@ import {
 } from "@mui/material";
 
 const HistoryTable = memo(({ filteredHistory }) => {
-  const formatDate = (date) => new Intl.DateTimeFormat('en-US').format(new Date(date));
+  const formatDate = (date) => {
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    }).format(new Date(date));
+  };
 
   return (
     <TableContainer component={Paper} sx={{ marginTop: 2 }}>

@@ -94,7 +94,7 @@ const OrderPage = () => {
 
   const handleSaveOrder = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/orders", {
+      await axios.post("http://localhost:5000/orders", {
         table: tableId,
         products: cart.map((item) => ({
           product: item.product._id,
@@ -106,22 +106,7 @@ const OrderPage = () => {
         ),
       });
 
-      const productsResponse = await axios.get(
-        "http://localhost:5000/products"
-      );
-
-      setCart(
-        response.data.products.map((p) => ({
-          product: {
-            ...p.product,
-            name:
-              productsResponse.data.find((prod) => prod._id === p.product._id)
-                ?.name || "",
-          },
-          quantity: p.quantity,
-        }))
-      );
-      setOrderId(response.data._id);
+      // No need to refetch the products, just keep the cart state as it is
       toast.success("Order saved successfully!");
     } catch (error) {
       setError("Failed to save order");
@@ -131,6 +116,11 @@ const OrderPage = () => {
 
   const handleCompleteOrder = async () => {
     try {
+      if (cart.length === 0) {
+        toast.warn("Order can't be empty!");
+        return; // Early return if the cart is empty
+      }
+
       if (!orderId) {
         await handleSaveOrder();
       }
