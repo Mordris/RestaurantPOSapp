@@ -48,9 +48,9 @@ export const createOrder = async (order) => {
   }
 };
 
-export const fetchHistory = async (page = 1, limit = 20) => {
+export const fetchHistory = async () => {
   try {
-    const response = await api.get(`/history?page=${page}&limit=${limit}`);
+    const response = await api.get("/history");
     return response.data;
   } catch (error) {
     handleError(error);

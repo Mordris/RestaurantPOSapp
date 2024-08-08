@@ -2,26 +2,18 @@ const express = require("express");
 const router = express.Router();
 const { History } = require("../db");
 
-// Route to get paginated history
+// Route to get all history data at once
 router.get("/", async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 20;
-    const skip = (page - 1) * limit;
-
+    // Fetch all history entries, populate the necessary fields
     const history = await History.find()
-      .skip(skip)
-      .limit(limit)
       .populate("table", "name")
       .populate("products.product", "name");
 
-    const totalCount = await History.countDocuments();
+    // Sort the history data by date (newest first by default)
+    history.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-    res.json({
-      history,
-      totalPages: Math.ceil(totalCount / limit),
-      currentPage: page,
-    });
+    res.json({ history });
   } catch (error) {
     console.error("Error fetching history:", error);
     res.status(500).json({ message: "Server Error" });

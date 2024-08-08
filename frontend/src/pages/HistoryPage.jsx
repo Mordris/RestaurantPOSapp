@@ -1,12 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import {
-  Typography,
-  Box,
-  Paper,
-  CircularProgress,
-  Alert,
-  Pagination,
-} from "@mui/material";
+import { Typography, Box, Paper, CircularProgress, Alert } from "@mui/material";
 import { fetchHistory } from "../api";
 import SearchAndSort from "../components/History/SearchAndSort";
 import HistoryTable from "../components/History/HistoryTable";
@@ -18,8 +11,6 @@ const HistoryPage = () => {
   const [sort, setSort] = useState("newest");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
 
   // Function to filter and sort history
   const filterAndSortHistory = useCallback(() => {
@@ -52,76 +43,56 @@ const HistoryPage = () => {
     setFilteredHistory(filtered);
   }, [history, search, sort]);
 
-  // Function to load history data
-  const loadHistory = async (page) => {
-    setLoading(true);
-    try {
-      const data = await fetchHistory(page);
-      if (data && Array.isArray(data.history)) {
-        setHistory(data.history);
-        setTotalPages(data.totalPages);
-      } else {
-        console.error("Unexpected data format:", data);
-      }
-    } catch (error) {
-      setError("Failed to load history.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Load history when page changes
+  // Fetch history data from the server
   useEffect(() => {
-    loadHistory(page);
-  }, [page]);
+    const loadHistory = async () => {
+      try {
+        const { history: fetchedHistory } = await fetchHistory();
+        setHistory(fetchedHistory);
+        setLoading(false);
+      } catch (err) {
+        setError("Failed to fetch history");
+        setLoading(false);
+      }
+    };
 
-  // Filter and sort history whenever `search`, `sort`, or `history` changes
+    loadHistory();
+  }, []);
+
   useEffect(() => {
     filterAndSortHistory();
-  }, [search, sort, filterAndSortHistory, page]);
+  }, [search, sort, filterAndSortHistory]);
 
-  const handleSearchChange = (e) => {
-    setSearch(e.target.value);
+  const handleSearchChange = (value) => {
+    setSearch(value);
   };
 
-  const handleSortChange = (e) => {
-    setSort(e.target.value);
-    setPage(1); // Reset page to 1 when sort changes
+  const handleSortChange = (value) => {
+    setSort(value);
   };
-
-  const handlePageChange = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  if (loading) return <CircularProgress />;
-  if (error) return <Alert severity="error">{error}</Alert>;
 
   return (
-    <Box sx={{ px: { xs: 2, sm: 4 }, py: 4 }}>
-      <Typography variant="h3" gutterBottom align="center">
+    <Box sx={{ p: 2 }}>
+      <Typography variant="h4" gutterBottom>
         Order History
       </Typography>
-      <Box sx={{ mb: 4 }}>
+
+      <Paper sx={{ p: 2, mb: 2 }}>
         <SearchAndSort
           search={search}
-          sort={sort}
           onSearchChange={handleSearchChange}
+          sort={sort}
           onSortChange={handleSortChange}
         />
-      </Box>
-      <Paper sx={{ p: 2 }}>
-        <HistoryTable filteredHistory={filteredHistory} />
       </Paper>
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-        <Pagination
-          count={totalPages}
-          page={page}
-          onChange={handlePageChange}
-          color="primary"
-          siblingCount={1} // Optional: Adjust as needed
-          boundaryCount={1} // Optional: Adjust as needed
-        />
-      </Box>
+
+      {loading ? (
+        <CircularProgress />
+      ) : error ? (
+        <Alert severity="error">{error}</Alert>
+      ) : (
+        <HistoryTable history={filteredHistory} />
+      )}
     </Box>
   );
 };
