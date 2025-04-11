@@ -1,6 +1,6 @@
 # Restaurant POS System
 
-![App Logo](frontend/public/appLogo.png)
+<img src="frontend/public/appLogo.png" alt="App Logo" width="150">
 
 A comprehensive Point of Sale (POS) application designed specifically for restaurants. This system allows staff to manage tables, take orders efficiently, track order history, and generate receipts. Built with a modern tech stack featuring Node.js/Express for the backend, React/Material UI for the frontend, and MongoDB for data persistence.
 
@@ -20,30 +20,20 @@ A comprehensive Point of Sale (POS) application designed specifically for restau
 
 ## 📸 Screenshots
 
-_(Add your screenshots here. Recommended screenshots:)_
-
 1.  **Home Page:** Welcome screen with navigation options.
-
-    ```
-    [](./screenshots/project8-3.png)
-    ```
+    ![Home Page](./screenshots/project8-3.png)
 
 2.  **Tables View:** Grid showing all tables with their current status (Free/Busy).
-    ```
-    [](./screenshots/project8-1.png)
-    ```
+    ![Tables View](./screenshots/project8-1.png)
+
 3.  **Order Page:** View for a specific table, showing product grid, cart, total price, and order actions.
-    ```
-    [](./screenshots/project8.png)
-    ```
+    ![Order Page](./screenshots/project8.png)
+
 4.  **History Page:** Table displaying past orders with search and sort options.
-    ```
-    [](./screenshots/project8-2.png)
-    ```
-5.  ** PDF Receipt:** Example of a generated PDF receipt.
-    ```
-    [](./screenshots/project8-4.png)
-    ```
+    ![History Page](./screenshots/project8-2.png)
+
+5.  **PDF Receipt:** Example of a generated PDF receipt.
+    ![PDF Receipt Example](./screenshots/project8-4.png)
 
 ## 💻 Technology Stack
 
